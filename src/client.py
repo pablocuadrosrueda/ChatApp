@@ -27,11 +27,7 @@ def conecta_servidor(s : socket, direccion_ip : str , port : int):
 def envia_mensaje(ipServer : str ,s : socket, direccion_ip : str , port : int,contenido : str):
     #Empaquetamos contenido 
     mensaje = Mensaje(ipServer,s.getsockname()[0],direccion_ip,port,contenido)
-    print(mensaje)
-    if(conecta_servidor(s,ipServer,port)==True):
-        #Transformamos la instancia de clase en
-        # un formato válido para enviar con bytes 
-        s.sendall(mensaje.to_bytes())
+    s.sendall(mensaje.to_bytes())
 
 if __name__ == "__main__":
     #Especificamos el puerto del servidor 
@@ -39,8 +35,11 @@ if __name__ == "__main__":
     #Creamos el socket 
     s = crea_socket_tcp(ipServidor,puerto)
     #Escribimos el contenido 
-    contenido = "Hola Mundo soy Pablo"
-    #Mandamos el mensaje al destinatario
-    ip = "192.168.1.33"
-    r = (envia_mensaje(ipServidor,s,ip,port,contenido))
-  
+    contenido = input("Introduce el contenido del mensaje: ")
+    #Conexión al servidor
+    if(conecta_servidor(s,ipServidor,port)==True):
+        #Mandamos el mensaje al destinatario
+        ip = "127.0.0.1"
+        r = (envia_mensaje(ipServidor,s,ip,port,contenido))
+    else:
+        print("Error de conexión")
