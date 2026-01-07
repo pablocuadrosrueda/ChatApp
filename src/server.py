@@ -4,21 +4,25 @@ import socketserver
 import sys
 from mensaje import Mensaje, NUM_MENSAJES
 from pprint import pprint
+from threading import Thread
 
 # VARIABLES CONSTANTES : 
 ip = "127.0.0.1"
 puerto = 57876 #automático -> 0 
 BUFFER_SIZE = 1024
 
-    #Diccionario de clientes en línea con : 
+    #Diccionario de clientes en línea con clave (IP:PUERTO) -> socket : 
 clientes = {}        
 
 """
 Función para agregar un cliente en línea, devuelve True si existía previamente y False si no 
 """
 def agrega_cliente( ip : str , s : socket):
-    if ip not in clientes:
-        clientes[ip] = s
+    puerto = s.getpeername()[1]
+    if f"{ip}:{puerto}" not in clientes:
+        
+        print(f"\nBIENVENIDO CLIENTE : [{ip}:{puerto}]")
+        clientes[f"{ip}:{puerto}"] = s
         return True
     return False
 
@@ -45,9 +49,14 @@ def inicia_servidor( s : socket ):
     print("Servidor escuchando en puerto:", puerto_real)
     while True:
         print(f"\nServidor en escucha ... ")
-        contenido = extrae_mensaje(s)
-        print(contenido)
-        envia_mensaje_a_destinatario(contenido)
+        conn = acepta(s)
+        #Aquí abirmos un nuevo hilo para cada usuario y 
+        # llamaríamos a procesa_mensaje y posteriormente a emvia a destinatario
+        t = Thread(target=procesa_mensaje,args=(conn,),daemon=True)
+        #Arrancamos el nuevo hilo para el usuario
+        t.start()
+        
+        
 
 """
 Función para apagar el servidor
@@ -56,42 +65,62 @@ def apaga_servidor( s : socket ):
     s.close()    
 
 """
-Función que acepta y extrae el contenido del mensaje
+Función que acepta al usuario en el servidor.
+Devuelve el socket que se utiliza para comunicarse con el usuario de vuelta que 
+será util para recibir el contenido del mensaje.
 """
-def extrae_mensaje( s : socket ): 
+def acepta( s : socket ): 
     #Aceptamos conexiones Valores de retorno de accept -> (conn, address) siendo adress (direccion_ip,puerto)
     conn, addr = s.accept() 
-    print(f"IP emisor: {addr[0]}") 
-    #Utilizamos el socket creado para la conexión con el 
-    contenido = conn.recvfrom(BUFFER_SIZE)[0] 
-    #print(f"Contenido del Mensaje: {contenido}")
+    #print(f"IP emisor: {addr[0]}:{conn.getpeername()[1]}") 
+    #Agregamos el cliente si es nuevo 
+    agrega_cliente(addr[0],conn)
+    return conn
 
-    #Si la Ip es nueva la almacenamos en clientes
-    agrega_cliente(contenido.split(b"|")[0], conn)
+"""
+Función para extracción y procesamiento del mensaje.
+Devuelve una tupla ( destinatario , contenido del mensaje )
+"""
 
-    # #Devolvemos contenido 
-    return contenido
+def procesa_mensaje ( s : socket ): 
+    destinatario=""
+    #Ya abierto el hilo para el usuario concreto, abrimos un bucle para recibir los mensajes.
+    while True:
+        #Utilizamos el socket creado para la conexión con el usuario
+        contenido = s.recv(BUFFER_SIZE)
+        #Comprobamos condición de salida
+        if not contenido: 
+            break
+        #Procesamos el contenido del mensaje: 
+        mensaje = contenido.split(b"|")[3]
+        destinatario = contenido.split(b"|")[1]
+        puerto = s.getpeername()[1]
+
+
+        print(f"""
+                NUEVO MENSAJE DE : {s.getpeername()[0]}:{s.getpeername()[1]}
+                NUEVO MENSAJE PARA : {destinatario.decode('utf-8')}
+                CON CONTENIDO : 
+                    {mensaje.decode('utf-8')}
+              """)
+        #Reenviamos el mensaje al destinatario del mismo
+        envia_mensaje_a_destinatario(destinatario,mensaje)
+    #Si salimos del bucle es porque el usuario ha abandonado la sesión por tanto 
+    #cerramos tanto el hilo como su aparición en el diccionario de clientes
+    del clientes[f"{destinatario.decode('utf-8')}:{puerto}"]
+
 
 """
 Función para reenviar el contenido al cliente especificado 
 """
-def envia_mensaje_a_destinatario(contenido : str):
-    #Extraemos el destinatario del mensaje y el contenido
-    destinatario = contenido.split(b"|")[1]
-    mensaje = contenido.split(b"|")[3]
+def envia_mensaje_a_destinatario(destinatario : str , mensaje : str):
     # Si tenemos el socket guardado usamos ese, si no creamos uno y envíamos
-    s = None
-    if destinatario in clientes:
-      s = clientes[destinatario]
-
+    s = clientes[destinatario.decode('utf-8')]
     if s != None:
         s.sendall(mensaje)  
     else:
         raise KeyError("El usuario destinatario no está en línea y por tanto no se puede proceder al envío de mensajes")
-
-
    
-
 
 
 if __name__ == "__main__":
