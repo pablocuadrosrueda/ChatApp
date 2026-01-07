@@ -115,11 +115,12 @@ Función para reenviar el contenido al cliente especificado
 """
 def envia_mensaje_a_destinatario(destinatario : str , mensaje : str):
     # Si tenemos el socket guardado usamos ese, si no creamos uno y envíamos
-    s = clientes[destinatario.decode('utf-8')]
-    if s != None:
-        s.sendall(mensaje)  
-    else:
-        raise KeyError("El usuario destinatario no está en línea y por tanto no se puede proceder al envío de mensajes")
+    #s = clientes[destinatario.decode('utf-8')]
+    print("FUNCION ENVIAR MENSAJE PENDIENTE")
+    #if s != None:
+    #    s.sendall(mensaje)  
+    #else:
+    #    raise KeyError("El usuario destinatario no está en línea y por tanto no se puede proceder al envío de mensajes")
    
 
 

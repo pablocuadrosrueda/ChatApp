@@ -31,29 +31,6 @@ def envia_mensaje(ipServer : str ,s : socket, direccion_ip : str , port : int,co
     s.sendall(mensaje.to_bytes())
 
 
-def escucha(s : socket):
-    s.listen()
-    while True:
-        conn, addr = s.accept() 
-        #print(f"IP emisor: {addr[0]}:{conn.getpeername()[1]}") 
-        destinatario=""
-        #Utilizamos el socket creado para la conexión con el usuario
-        contenido = s.recv(BUFFER_SIZE)
-
-        #Procesamos el contenido del mensaje: 
-        mensaje = contenido.split(b"|")[3]
-        destinatario = contenido.split(b"|")[1]
-        puerto = s.getpeername()[1]
-
-        print(f"""
-                    NUEVO MENSAJE DE : {s.getpeername()[0]}:{s.getpeername()[1]}
-                    NUEVO MENSAJE PARA : {destinatario.decode('utf-8')}
-                    CON CONTENIDO : 
-                        {mensaje.decode('utf-8')}
-                """)
-        
-
-
 
 if __name__ == "__main__":
     #Especificamos el puerto del servidor 
@@ -64,7 +41,7 @@ if __name__ == "__main__":
 
     if(conecta_servidor(s,ipServidor,port)==True):
             #Mandamos el mensaje al destinatario
-            ip = "127.0.0.1:59920"
+            ip = "127.0.0.1:59970"
             while True:
                 #Escribimos el contenido 
                 contenido = input("Introduce el contenido del mensaje: ")
