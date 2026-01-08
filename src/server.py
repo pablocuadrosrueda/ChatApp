@@ -20,7 +20,6 @@ Función para agregar un cliente en línea, devuelve True si existía previament
 def agrega_cliente( ip : str , s : socket):
     puerto = s.getpeername()[1]
     if f"{ip}:{puerto}" not in clientes:
-        
         print(f"\nBIENVENIDO CLIENTE : [{ip}:{puerto}]")
         clientes[f"{ip}:{puerto}"] = s
         return True
@@ -94,12 +93,13 @@ def procesa_mensaje ( s : socket ):
         #Procesamos el contenido del mensaje: 
         mensaje = contenido.split(b"|")[3]
         destinatario = contenido.split(b"|")[1]
-        puerto = s.getpeername()[1]
+        puerto = contenido.split(b"|")[2]
 
+        destinatario = destinatario.decode('utf-8')+":"+puerto.decode('utf-8')
 
         print(f"""
                 NUEVO MENSAJE DE : {s.getpeername()[0]}:{s.getpeername()[1]}
-                NUEVO MENSAJE PARA : {destinatario.decode('utf-8')}
+                NUEVO MENSAJE PARA : {destinatario}
                 CON CONTENIDO : 
                     {mensaje.decode('utf-8')}
               """)
@@ -107,20 +107,20 @@ def procesa_mensaje ( s : socket ):
         envia_mensaje_a_destinatario(destinatario,mensaje)
     #Si salimos del bucle es porque el usuario ha abandonado la sesión por tanto 
     #cerramos tanto el hilo como su aparición en el diccionario de clientes
-    del clientes[f"{destinatario.decode('utf-8')}:{puerto}"]
+    del clientes[f"{destinatario}"]
 
 
 """
 Función para reenviar el contenido al cliente especificado 
 """
 def envia_mensaje_a_destinatario(destinatario : str , mensaje : str):
-    # Si tenemos el socket guardado usamos ese, si no creamos uno y envíamos
-    #s = clientes[destinatario.decode('utf-8')]
-    print("FUNCION ENVIAR MENSAJE PENDIENTE")
-    #if s != None:
-    #    s.sendall(mensaje)  
-    #else:
-    #    raise KeyError("El usuario destinatario no está en línea y por tanto no se puede proceder al envío de mensajes")
+    #Devolvemos la información por el socket bidireccional
+    s = clientes[destinatario]
+    if s != None:
+        print("Enviando ...")
+        s.sendall(b'Hola que tal')  
+    else:
+        raise KeyError("El usuario destinatario no está en línea y por tanto no se puede proceder al envío de mensajes")
    
 
 
