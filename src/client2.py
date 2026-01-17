@@ -82,9 +82,9 @@ if __name__ == "__main__":
             t.start()
             while True:
                 #Introduce el destinatario del mensaje 
-                nombreDestinatario = input("\nIntroduce el nombre del destinatario ")
+                nombreDestinatario = input("Introduce el nombre del destinatario ")
                 #Escribimos el contenido 
-                contenido = input("\nIntroduce el contenido del mensaje: ")
+                contenido = input("Introduce el contenido del mensaje: ")
                 #Conexión al servidor
                 r = (envia_mensaje(nommbreusuario,nombreDestinatario,ipServidor,s,contenido))
     else:
