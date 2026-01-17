@@ -21,3 +21,12 @@ La verisón 2 implementea ya con seguridad :
 
 	- Diccionario para almacenamiento de clientes alternado : Key -> NombreUsuario Clave -> Socket
 
+## Versión 3 ( V3 ) ( En proceso ... ): 
+
+La versión 3 se va a enfocar en las siguientes fases : 
+
+	- Primera fase de corrección de pequeños errores o revisiones 
+
+	- Segunda y foco de la "feature" : Persistencia de los Datos en SQL y Paso de Mensajes vía json
+
+	
