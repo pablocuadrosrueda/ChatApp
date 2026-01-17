@@ -107,7 +107,7 @@ def procesa_mensaje ( s : socket ):
         envia_mensaje_a_destinatario(destinatario,mensaje)
     #Si salimos del bucle es porque el usuario ha abandonado la sesión por tanto 
     #cerramos tanto el hilo como su aparición en el diccionario de clientes
-    del clientes[f"{destinatario}"]
+    del clientes[f"{s.getpeername()[0]}:{s.getpeername()[1]}"]
 
 
 """
@@ -118,7 +118,7 @@ def envia_mensaje_a_destinatario(destinatario : str , mensaje : str):
     s = clientes[destinatario]
     if s != None:
         print("Enviando ...")
-        s.sendall(b'Hola que tal')  
+        s.sendall(mensaje)  
     else:
         raise KeyError("El usuario destinatario no está en línea y por tanto no se puede proceder al envío de mensajes")
    

@@ -53,9 +53,10 @@ def conecta_servidor(s : socket, direccion_ip : str , port : int):
 """
 Función para el envío del paquete al servidor
 """
-def envia_mensaje(ipServer : str ,s : socket, direccion_ip : str , port : int,contenido : str):
+def envia_mensaje(nombreEmisor : str, nombreDestinario : str , ipServer : str ,s : socket,contenido : str):
     #Empaquetamos contenido 
-    mensaje = Mensaje(ipServer,s.getsockname(),direccion_ip,port,contenido)
+    mensaje = Mensaje(nombreEmisor,nombreDestinario,ipServer,contenido)
+    #Mandamos el contenido al servidor 
     s.sendall(mensaje.to_bytes())
 
 
@@ -65,24 +66,22 @@ if __name__ == "__main__":
     port = 57876
     #Creamos el socket 
     s = crea_socket_tcp()
-    #Intentamos conectar con el servidor : 
+    #Intentamos conectar con el servidor :
+    nommbreusuario = ""
     if(conecta_servidor(s,ipServidor,port)==True):
-            #Mandamos el mensaje al destinatario ( por ahora fijamos este )
-            #ip = "127.0.0.1:59971"
-            #Una vez nos conectemos abrimos un solo hilo para escuchar : 
-            
             #Aquí debemos de lanzar otro hilo que ejecute la función de escucha para recibir las respuestas
             t = Thread(target=procesa_mensaje,args=(s,),daemon=True)
             #Arrancamos el hilo
             t.start()
-
+            #Iniciamos sesion : 
+            nommbreusuario = input("Introduce tu nombre de usuario : ")
             while True:
                 #Introduce el destinatario del mensaje 
-                ip , puerto = input("Introduce el destinatario del mensaje formato {ip:puerto} : ").split(":")
+                nombreDestinatario = input("Introduce el nombre del destinatario ")
                 #Escribimos el contenido 
                 contenido = input("Introduce el contenido del mensaje: ")
                 #Conexión al servidor
-                r = (envia_mensaje(ipServidor,s,ip,puerto,contenido))
+                r = (envia_mensaje(nommbreusuario,nombreDestinatario,ipServidor,s,contenido))
     else:
             print("Error de conexión")
             
