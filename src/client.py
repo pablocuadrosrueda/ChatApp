@@ -39,15 +39,20 @@ def crea_socket_tcp() -> socket:
     return s
 
 """
-Función que gestiona la conexión al servidor
+Función que gestiona la conexión al servidor, además si tenemos exito mandaremos al servidor un mensaje {nombreUsuario}
+para que se pueda llevar el registro con éxito 
 """
-def conecta_servidor(s : socket, direccion_ip : str , port : int):
+def conecta_servidor(s : socket, direccion_ip : str , port : int, nombreUsuario : str):
     addr = (direccion_ip,port)
     #Validamos conexión
     err = s.connect(addr)
     if err:
         return False
     else:
+        #Empaquetamos contenido : 
+        mensaje = f"ONLINE|{nombreUsuario}"
+        #Mandamos información de inicio de sesión 
+        s.sendall(mensaje.encode('utf-8'))
         return True
     
 """
@@ -68,18 +73,18 @@ if __name__ == "__main__":
     s = crea_socket_tcp()
     #Intentamos conectar con el servidor :
     nommbreusuario = ""
-    if(conecta_servidor(s,ipServidor,port)==True):
+    #Iniciamos sesion : 
+    nommbreusuario = input("Introduce tu nombre de usuario : ")
+    if(conecta_servidor(s,ipServidor,port,nommbreusuario)==True):
             #Aquí debemos de lanzar otro hilo que ejecute la función de escucha para recibir las respuestas
             t = Thread(target=procesa_mensaje,args=(s,),daemon=True)
             #Arrancamos el hilo
             t.start()
-            #Iniciamos sesion : 
-            nommbreusuario = input("Introduce tu nombre de usuario : ")
             while True:
                 #Introduce el destinatario del mensaje 
-                nombreDestinatario = input("Introduce el nombre del destinatario ")
+                nombreDestinatario = input("\nIntroduce el nombre del destinatario ")
                 #Escribimos el contenido 
-                contenido = input("Introduce el contenido del mensaje: ")
+                contenido = input("\nIntroduce el contenido del mensaje: ")
                 #Conexión al servidor
                 r = (envia_mensaje(nommbreusuario,nombreDestinatario,ipServidor,s,contenido))
     else:

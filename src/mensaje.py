@@ -3,8 +3,8 @@ NUM_MENSAJES = 0
 class Mensaje:
 # ipS -> ip del servidor , ipO -> ip de origen, ipD -> ip de destino
     def __init__(self,nombreEmisor,nombreDestinatario,ipS,msg):
-        self.__nombreEmisor = nombreEmisor,
-        self.__nombreDestinatario = nombreDestinatario,
+        self.__nombreEmisor = nombreEmisor
+        self.__nombreDestinatario = nombreDestinatario
         self.__id = f"{nombreEmisor}-{NUM_MENSAJES}"
         self.__ipS = ipS
         self.__contenido = msg
