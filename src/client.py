@@ -1,6 +1,6 @@
 import socket 
 from socket import AF_INET, SOCK_STREAM
-from mensaje import Mensaje, NUM_MENSAJES
+from common.mensaje import Mensaje, NUM_MENSAJES
 import socketserver
 import sys
 from threading import Thread

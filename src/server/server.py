@@ -75,7 +75,7 @@ def acepta( s : socket ):
     if contenido.split(b'|')[0].decode('utf-8') == "ONLINE":
         #Agregamos cliente al diccionario 
         print(f"{contenido.split(b'|')[1].decode('utf-8')}")
-        agrega_cliente(contenido.split(b'|')[1].decode('utf-8'),conn)
+        agrega_cliente(contenido.split(b"|")[1].decode('utf-8'),conn)
     return conn
 
 """

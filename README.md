@@ -25,8 +25,8 @@ La verisón 2 implementea ya con seguridad :
 
 La versión 3 se va a enfocar en las siguientes fases : 
 
-	- Primera fase de corrección de pequeños errores o revisiones 
+	- Despliegue de la aplicación en contenedores de Docker  SERVIDOR -> [X] CLIENTE -> [ ]
 
-	- Segunda y foco de la "feature" : Persistencia de los Datos en SQL y Paso de Mensajes vía json
+	- Reestructuración del sistema de ficheros del proyecto para incluir docker
 
 	

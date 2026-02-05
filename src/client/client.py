@@ -1,6 +1,6 @@
 import socket 
 from socket import AF_INET, SOCK_STREAM
-from mensaje import Mensaje, NUM_MENSAJES
+from common.mensaje import Mensaje, NUM_MENSAJES
 import socketserver
 import sys
 from threading import Thread
@@ -82,9 +82,9 @@ if __name__ == "__main__":
             t.start()
             while True:
                 #Introduce el destinatario del mensaje 
-                nombreDestinatario = input("Introduce el nombre del destinatario ")
+                nombreDestinatario = input("\nIntroduce el nombre del destinatario ")
                 #Escribimos el contenido 
-                contenido = input("Introduce el contenido del mensaje: ")
+                contenido = input("\nIntroduce el contenido del mensaje: ")
                 #Conexión al servidor
                 r = (envia_mensaje(nommbreusuario,nombreDestinatario,ipServidor,s,contenido))
     else:
