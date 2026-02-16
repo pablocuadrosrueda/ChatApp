@@ -7,7 +7,7 @@ from pprint import pprint
 from threading import Thread
 
 # VARIABLES CONSTANTES : 
-ip = "127.0.0.1"
+ip = "0.0.0.0"
 puerto = 57876 #automático -> 0 
 BUFFER_SIZE = 1024
 

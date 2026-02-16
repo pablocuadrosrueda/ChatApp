@@ -2,8 +2,8 @@ FROM python:3.11-slim
 
 WORKDIR /src
 
-COPY .. .
+COPY . .
 
 EXPOSE 57876
 
-CMD ["python", "-m", "server.server"]
+CMD ["python", "-u", "-m", "server.server"]

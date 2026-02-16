@@ -1,9 +1,10 @@
 import socket 
 from socket import AF_INET, SOCK_STREAM
-from common.mensaje import Mensaje, NUM_MENSAJES
+from src.common.mensaje import Mensaje, NUM_MENSAJES
 import socketserver
 import sys
 from threading import Thread
+import time
 
 # VARIABLES CONSTANTES : 
 ipServidor = "127.0.0.1"
@@ -18,16 +19,17 @@ Devuelve una tupla ( destinatario , contenido del mensaje )
 
 def procesa_mensaje ( s : socket ):    
     while True:
-        #Utilizamos el socket creado para la conexión con el usuario
-        contenido = s.recv(BUFFER_SIZE)
-        #Procesamos el contenido del mensaje: 
-        print(contenido.decode('utf-8'))
-
-        #print(f"""
-        #        NUEVO MENSAJE DE : {s.getpeername()[0]}:{s.getpeername()[1]}
-        #        CON CONTENIDO : 
-        #            {mensaje.decode('utf-8')}
-        #    """)
+        try:
+            contenido = s.recv(BUFFER_SIZE)
+            if not contenido:
+                break
+            print(contenido.decode('utf-8'))
+        except ConnectionResetError:
+            print("\nEl servidor cerró la conexión o todavía no aceptó. Hilo terminado.")
+            break
+        except Exception as e:
+            print(f"Error inesperado: {e}")
+            break
     
    
 """

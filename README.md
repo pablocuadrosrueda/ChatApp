@@ -29,4 +29,14 @@ La versión 3 se va a enfocar en las siguientes fases :
 
 	- Reestructuración del sistema de ficheros del proyecto para incluir docker
 
+	- Importante tener la aplicación encendida de Docker
+
+	- Comando aprendido -> docker run -p 57876:57876 chat-server
+
+		Primer puerto se refiere al del contenedor ( origen ), el segundo es al de mi máquina ( destino ).
+
+
+	- Cambio clave en servidor -> ip = 0.0.0.0 para correcto funcionamiento con docker 
+
+		De esta manera permitimos escuchar en todas las interfaces, ya que al utilizar 127.0.0.1 estaríamos usando el localhost del contendor, no de nuestra máquina lo cuál daba error. 
 	
